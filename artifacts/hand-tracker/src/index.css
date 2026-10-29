@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --font-sans: var(--app-font-sans);
+}
+
+:root {
+  --background: 0 0% 0%;
+  --foreground: 0 0% 100%;
+  --app-font-sans: 'Inter', system-ui, sans-serif;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    background: black;
+    color: white;
+    font-family: var(--app-font-sans);
+    margin: 0;
+    padding: 0;
+  }
+}

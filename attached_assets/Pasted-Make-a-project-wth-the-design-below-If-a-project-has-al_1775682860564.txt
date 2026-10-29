@@ -1,0 +1,509 @@
+Make a project wth the design below. If a project has already been started, add this design to the project as a new view and connect it to the rest of my application.
+
+Ensure the visual characteristics, layout, and interactions in the design are preserved with perfect fidelity.
+
+```
+<html lang="en" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">Chronicle — The Digital Binder</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" vid="5">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" vid="6">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=Inter:wght@400;500;600&amp;family=Playfair+Display:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet" vid="7">
+    <style vid="8">
+        :root {
+            --paper: #FDFCFB;
+            --binder-bg: #EAE8E2;
+            --ink: #1A1A1A;
+            --accent-purple: #E0D4F7;
+            --accent-peach: #F7E5D4;
+            --border: rgba(0,0,0,0.06);
+            --ring-gradient: linear-gradient(180deg, #D1D1D1 0%, #F5F5F5 50%, #B8B8B8 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: #F0EEE9;
+            color: var(--ink);
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        
+        .ambient-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 20%, var(--accent-purple) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, var(--accent-peach) 0%, transparent 40%);
+            opacity: 0.3;
+            filter: blur(80px);
+        }
+
+        
+        .binder-container {
+            width: 1100px;
+            height: 750px;
+            background: var(--binder-bg);
+            border-radius: 24px;
+            padding: 12px;
+            box-shadow: 
+                0 40px 100px -20px rgba(0,0,0,0.15),
+                0 10px 30px -10px rgba(0,0,0,0.1),
+                inset 0 0 0 1px rgba(255,255,255,0.5);
+            display: flex;
+            position: relative;
+            perspective: 2000px;
+        }
+
+        
+        .rings {
+            position: absolute;
+            left: 50%;
+            top: 40px;
+            bottom: 40px;
+            width: 40px;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .ring {
+            width: 32px;
+            height: 8px;
+            background: var(--ring-gradient);
+            border-radius: 4px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .ring::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            box-shadow: inset 0 1px 1px rgba(255,255,255,0.8);
+            border-radius: 4px;
+        }
+
+        
+        .book {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        .page {
+            flex: 1;
+            background: var(--paper);
+            height: 100%;
+            position: relative;
+            padding: 60px;
+            transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.02);
+        }
+
+        .page-left {
+            border-radius: 12px 2px 2px 12px;
+            border-right: 1px solid rgba(0,0,0,0.05);
+            transform-origin: right center;
+        }
+
+        .page-right {
+            border-radius: 2px 12px 12px 2px;
+            border-left: 1px solid rgba(0,0,0,0.05);
+            transform-origin: left center;
+        }
+
+        
+        .page::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px);
+            background-size: 100% 28px;
+            background-position: 0 62px;
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        
+        .meta-label {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #999;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .page-header {
+            margin-bottom: 48px;
+            position: relative;
+        }
+
+        .date-display {
+            font-family: 'Playfair Display', serif;
+            font-size: 42px;
+            font-weight: 400;
+            line-height: 1.1;
+        }
+
+        .sub-header {
+            font-size: 14px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        
+        .task-list {
+            display: grid;
+            gap: 0px;
+        }
+
+        .task-item {
+            height: 28px;
+            display: flex;
+            align-items: center;
+            border-bottom: 0px solid transparent;
+            font-size: 13px;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .task-item:hover {
+            background: rgba(0,0,0,0.02);
+            padding-left: 4px;
+        }
+
+        .checkbox {
+            width: 14px;
+            height: 14px;
+            border: 1px solid #CCC;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+
+        .task-item.checked .checkbox {
+            background: var(--ink);
+            border-color: var(--ink);
+            position: relative;
+        }
+
+        .task-item.checked .checkbox::after {
+            content: '✓';
+            color: white;
+            font-size: 10px;
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .task-item.checked span {
+            text-decoration: line-through;
+            color: #999;
+        }
+
+        
+        .notes-area {
+            line-height: 28px;
+            font-size: 14px;
+            color: #444;
+        }
+
+        .marginalia {
+            position: absolute;
+            right: -100px;
+            top: 150px;
+            width: 80px;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 12px;
+            color: #A49B8E;
+            line-height: 1.4;
+            transform: rotate(5deg);
+        }
+
+        
+        .tabs {
+            position: absolute;
+            right: -45px;
+            top: 60px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .tab {
+            width: 50px;
+            height: 80px;
+            background: var(--paper);
+            border-radius: 0 8px 8px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 4px 2px 10px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease;
+            writing-mode: vertical-rl;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            border: 1px solid var(--border);
+            border-left: none;
+        }
+
+        .tab:hover {
+            transform: translateX(4px);
+        }
+
+        .tab.active {
+            background: var(--accent-purple);
+            width: 55px;
+        }
+
+        .tab.peach { background: var(--accent-peach); }
+        .tab.blue { background: var(--accent-purple); }
+
+        
+        .btn-add {
+            position: absolute;
+            bottom: 40px;
+            right: 40px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--ink);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .btn-add:hover {
+            transform: scale(1.1) rotate(90deg);
+        }
+
+        
+        .paper-glow {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            mix-blend-mode: soft-light;
+            opacity: 0.6;
+            transition: opacity 0.5s ease;
+        }
+
+        
+        .italic { font-style: italic; }
+        .serif { font-family: 'Playfair Display', serif; }
+        .mt-large { margin-top: 56px; }
+
+        @keyframes pageFlip {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(-180deg); }
+        }
+
+        .is-flipping {
+            animation: pageFlip 1.2s forwards cubic-bezier(0.645, 0.045, 0.355, 1);
+        }
+
+        .page-counter {
+            position: absolute;
+            bottom: 30px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 9px;
+            color: #BBB;
+        }
+        .page-left .page-counter { left: 40px; }
+        .page-right .page-counter { right: 40px; }
+
+    </style>
+</head>
+<body vid="9">
+
+    <div class="ambient-glow" vid="10"></div>
+
+    <div class="binder-container" vid="11">
+        <div class="rings" vid="12">
+            <div class="ring" vid="13"></div>
+            <div class="ring" vid="14"></div>
+            <div class="ring" vid="15"></div>
+            <div class="ring" vid="16"></div>
+            <div class="ring" vid="17"></div>
+            <div class="ring" vid="18"></div>
+            <div class="ring" vid="19"></div>
+            <div class="ring" vid="20"></div>
+        </div>
+
+        <div class="book" id="book" vid="21">
+            
+            <div class="page page-left" vid="22">
+                <div class="paper-glow" id="glow-left" vid="23"></div>
+                <div class="page-header" vid="24">
+                    <span class="meta-label" vid="25">Current Timeline</span>
+                    <h1 class="date-display" vid="26">Tuesday,<br vid="27">November 14</h1>
+                    <p class="sub-header italic" vid="28">Weeks remaining in quarter: 06</p>
+                </div>
+
+                <div class="task-list" vid="29">
+                    <span class="meta-label" vid="30">Primary Focus</span>
+                    <div class="task-item checked" vid="31">
+                        <div class="checkbox" vid="32"></div>
+                        <span vid="33">Finalize aesthetic direction for Project "Lumina"</span>
+                    </div>
+                    <div class="task-item" vid="34">
+                        <div class="checkbox" vid="35"></div>
+                        <span vid="36">Review tactile feedback prototypes</span>
+                    </div>
+                    <div class="task-item" vid="37">
+                        <div class="checkbox" vid="38"></div>
+                        <span vid="39">Client check-in: Studio Archetype</span>
+                    </div>
+                    
+                    <span class="meta-label mt-large" vid="40">Secondary Tasks</span>
+                    <div class="task-item" vid="41">
+                        <div class="checkbox" vid="42"></div>
+                        <span vid="43">Update component library (Grid System)</span>
+                    </div>
+                    <div class="task-item checked" vid="44">
+                        <div class="checkbox" vid="45"></div>
+                        <span vid="46">Organize workspace reference images</span>
+                    </div>
+                    <div class="task-item" vid="47">
+                        <div class="checkbox" vid="48"></div>
+                        <span vid="49">Drafting "The Future of Digital Objects"</span>
+                    </div>
+                    <div class="task-item" vid="50">
+                        <div class="checkbox" vid="51"></div>
+                        <span vid="52">Invoicing: Q3 deliverables</span>
+                    </div>
+                </div>
+
+                <div class="page-counter" vid="53">VOL. 24 / PG. 112</div>
+            </div>
+
+            
+            <div class="page page-right" vid="54">
+                <div class="paper-glow" id="glow-right" vid="55"></div>
+                <div class="page-header" vid="56">
+                    <span class="meta-label" vid="57">Notes &amp; Observations</span>
+                    <h2 class="serif" style="font-size: 24px;" vid="58">Atmospheric Texture</h2>
+                </div>
+
+                <div class="notes-area" vid="59">
+                    <p vid="60">The transition between physical and digital shouldn't be a jarring jump, but a soft gradient. We are building for the hand as much as the eye.</p>
+                    <p style="margin-top: 28px;" vid="61">Research points:</p>
+                    <ul style="list-style: none; padding-left: 0;" vid="62">
+                        <li vid="63">• Light refraction on semi-opaque surfaces</li>
+                        <li vid="64">• The "tooth" of high-gsm cotton paper</li>
+                        <li vid="65">• Micro-interactions that reward stillness</li>
+                    </ul>
+                    <p style="margin-top: 28px; color: #999; font-size: 12px;" vid="66">"Beauty is the purgation of superfluities." — Michelangelo</p>
+                </div>
+
+                <div class="marginalia" vid="67">
+                    Don't forget to check the ink density on the v2 prints.
+                </div>
+
+                <div class="btn-add" vid="68">+</div>
+
+                <div class="tabs" vid="69">
+                    <div class="tab active" vid="70">Nov</div>
+                    <div class="tab peach" vid="71">Dec</div>
+                    <div class="tab" vid="72">Jan</div>
+                    <div class="tab blue" vid="73">Feb</div>
+                </div>
+
+                <div class="page-counter" vid="74">VOL. 24 / PG. 113</div>
+            </div>
+        </div>
+    </div>
+
+    <script vid="75">
+        
+        const glowLeft = document.getElementById('glow-left');
+        const glowRight = document.getElementById('glow-right');
+        const binder = document.querySelector('.binder-container');
+
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX;
+            const y = e.clientY;
+            
+            const rect = binder.getBoundingClientRect();
+            const binderX = x - rect.left;
+            const binderY = y - rect.top;
+
+            
+            glowLeft.style.background = `radial-gradient(circle at ${binderX}px ${binderY}px, rgba(224, 212, 247, 0.4) 0%, transparent 60%)`;
+            glowRight.style.background = `radial-gradient(circle at ${binderX - 550}px ${binderY}px, rgba(247, 229, 212, 0.4) 0%, transparent 60%)`;
+        });
+
+        
+        document.querySelectorAll('.task-item').forEach(item => {
+            item.addEventListener('click', () => {
+                item.classList.toggle('checked');
+            });
+        });
+
+        
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                
+                binder.animate([
+                    { transform: 'scale(1)' },
+                    { transform: 'scale(1.005)' },
+                    { transform: 'scale(1)' }
+                ], { duration: 400, easing: 'cubic-bezier(0.4, 0, 0.2, 1)' });
+            });
+        });
+
+        
+        const btnAdd = document.querySelector('.btn-add');
+        btnAdd.addEventListener('click', () => {
+            const list = document.querySelector('.task-list');
+            const newItem = document.createElement('div');
+            newItem.className = 'task-item';
+            newItem.innerHTML = `
+                <div class="checkbox"></div>
+                <span contenteditable="true" style="outline: none;">New reflection...</span>
+            `;
+            list.appendChild(newItem);
+            newItem.querySelector('span').focus();
+        });
+    </script>
+
+</body></html>
+```

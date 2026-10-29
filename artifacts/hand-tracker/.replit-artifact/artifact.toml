@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Hand Tracking Demo"
+version = "1.0.0"
+id = "artifacts/hand-tracker"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 21671
+
+[services.development]
+run = "pnpm --filter @workspace/hand-tracker run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/hand-tracker", "run", "build" ]
+publicDir = "artifacts/hand-tracker/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "21671"
+BASE_PATH = "/"
