@@ -2,20 +2,22 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import type { Results, NormalizedLandmarkList } from "@mediapipe/hands";
 import CircularGallery from "./CircularGallery";
 
+const ASSET_BASE = import.meta.env.BASE_URL;
+
 const BASE_IMAGES = [
-  "/gallery/gallery-01.png?v=3",
-  "/gallery/gallery-02.png?v=3",
-  "/gallery/gallery-03.png?v=3",
-  "/gallery/gallery-04.png?v=3",
-  "/gallery/gallery-05.png?v=3",
+  `${ASSET_BASE}gallery/gallery-01.png?v=3`,
+  `${ASSET_BASE}gallery/gallery-02.png?v=3`,
+  `${ASSET_BASE}gallery/gallery-03.png?v=3`,
+  `${ASSET_BASE}gallery/gallery-04.png?v=3`,
+  `${ASSET_BASE}gallery/gallery-05.png?v=3`,
 ];
 
 const EXTRA_POOL = [
-  "/gallery/gallery-06.png?v=3",
-  "/gallery/gallery-07.png?v=3",
-  "/gallery/gallery-08.png?v=3",
-  "/gallery/gallery-09.png?v=3",
-  "/gallery/gallery-10.png?v=3",
+  `${ASSET_BASE}gallery/gallery-06.png?v=3`,
+  `${ASSET_BASE}gallery/gallery-07.png?v=3`,
+  `${ASSET_BASE}gallery/gallery-08.png?v=3`,
+  `${ASSET_BASE}gallery/gallery-09.png?v=3`,
+  `${ASSET_BASE}gallery/gallery-10.png?v=3`,
 ];
 
 function dist2d(a: { x: number; y: number }, b: { x: number; y: number }) {
@@ -322,7 +324,7 @@ export default function HandTracker() {
 
       {/* Desktop background — fills 100vw × 100vh regardless of design scale */}
       <img
-        src="/desktop-bg.jpg"
+        src={`${ASSET_BASE}desktop-bg.jpg`}
         alt=""
         style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", pointerEvents: "none", zIndex: 0 }}
       />
